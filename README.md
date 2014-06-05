@@ -1,4 +1,4 @@
-censusplot
+CensusViz
 ==========
 
-A Javascript D3.based API for creating Metric-Based Graph Visualizations.
+A JavaScript HTML5 components for Graph metrics visualization.
