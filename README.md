@@ -1,10 +1,9 @@
 CensusViz
 ==========
 
-HTML5 Web components for graph metrics visualization.
-
+HTML5 Web components for graph metrics visualization.   
 ```javascript
 <social-list  from="jsonSource()"> </social-list>
-```
-Generates the following:
-![](http://cl.ly/image/391r0o2r041C/Screen%20Shot%202014-06-06%20at%2011.21.11%20AM.png =50x)
+```   
+Generates the following:  
+<img src="http://cl.ly/image/3g2U063r3J2R/in1.png" alt="Image1" style="width: 225px;"/>
