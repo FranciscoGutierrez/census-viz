@@ -25,18 +25,45 @@
 /* Social List Component.
  * Universidad de las Américas Puebla http://ict.udlap.mx
  * As part of REAUMOBILE project.
- * Author: Francisco Gutiérrez fsalvador23@gmail.com
+ * Author: Francisco Gutiérrez (fsalvador23@gmail.com)
  */
 
-document.registerElement('social-list',{prototype: Object.create(HTMLElement.prototype)});
+document.registerElement('social-list', {
+                         prototype: Object.create(HTMLElement.prototype)
+                         });
 
-var sLeftTab   = "< Personas Interesantes"
-var scenterTab = "Personas que quizás conozcas"
-var srightTab  = "Líderes de Opinión >"
-
+var jsonData = "http://www.json-generator.com/j/bPhrNYMCnC?indent=4";
+var sLeftTab = "< Personas Interesantes";
+var scenterTab = "Personas que quizás conozcas";
+var srightTab = "Líderes de Opinión >";
+var imgsrc = "";
+var actionbutton1 = "";
+var actionbutton2 = "";
+/* Layout Make */
 $("social-list").append("<div class=\"container\"></div>");
 $(".container").append("<div class=\"tab-bar\"></div>");
-$(".tab-bar").append("<div class=\"left-tab\">"+sLeftTab+"</div>");
-$(".tab-bar").append("<div class=\"center-tab\">"+scenterTab+"</div>");
-$(".tab-bar").append("<div class=\"right-tab\">"+srightTab+"</div>");
+$(".tab-bar").append("<div class=\"left-tab\">" + sLeftTab + "</div>");
+$(".tab-bar").append("<div class=\"center-tab\">" + scenterTab + "</div>");
+$(".tab-bar").append("<div class=\"right-tab\">" + srightTab + "</div>");
+$(".container").append("<div class=\"box-container\"></div>");
 
+$.getJSON(jsonData, function (data) {
+          var items = [];
+          $.each(data.mayKnow, function (key, value) {
+                 items.push("<div class=\"box\">");
+                 items.push("<div class=\"hidden-id\""+this.guid +"</div>");
+                 items.push("<div class=\"img-box\"><img src=" + this.picture + "/></div>");
+                 items.push("<div class=\"metadata-box\">");
+                 items.push("<div class=\"lead-meta\">"+ this.name + "</div>");
+                 // items.push("<div class=\"\">"+ this.company + "</div>");
+                 items.push("<div class=\"sub-meta\">"+ this.location + "</div></div>");
+                 items.push("<div class=\"action-box\">");
+                 items.push("<div class=\"first-action\"><button>Agregar</button></div>");
+                 items.push("<div class=\"second-action\"><button>Mensaje</button></div></div>");
+                 items.push("</div></div>");
+                 });
+          $("<div/>", {
+            "class": "box-container",
+            html: items.join("")
+            }).appendTo(".container");
+          });
