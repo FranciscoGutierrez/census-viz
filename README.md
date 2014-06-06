@@ -2,6 +2,7 @@ CensusViz
 ==========
 
 HTML5 Web components for graph metrics visualization.   
+Simply:   
 ```javascript
 <social-list  from="jsonSource()"> </social-list>
 ```   
