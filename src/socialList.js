@@ -22,14 +22,21 @@
  * SOFTWARE.
  */
 
-/* Social List component.
+/* Social List Component.
  * Universidad de las Américas Puebla http://ict.udlap.mx
  * As part of REAUMOBILE project.
- * Written by Francisco Gutiérrez fsalvador23@gmail.com
- *
- * This source code is in the public domain; if your jurisdiction does not
- * recognize the public domain the terms of Creative Commons CC0 license
- * apply. In the other words, you can always do what you want.
+ * Author: Francisco Gutiérrez fsalvador23@gmail.com
  */
 
-//JavaScript Fun from here....
+document.registerElement('social-list',{prototype: Object.create(HTMLElement.prototype)});
+
+var sLeftTab   = "< Personas Interesantes"
+var scenterTab = "Personas que quizás conozcas"
+var srightTab  = "Líderes de Opinión >"
+
+$("social-list").append("<div class=\"container\"></div>");
+$(".container").append("<div class=\"tab-bar\"></div>");
+$(".tab-bar").append("<div class=\"left-tab\">"+sLeftTab+"</div>");
+$(".tab-bar").append("<div class=\"center-tab\">"+scenterTab+"</div>");
+$(".tab-bar").append("<div class=\"right-tab\">"+srightTab+"</div>");
+
