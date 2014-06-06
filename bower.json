@@ -1,0 +1,17 @@
+{
+  "name": "census-viz",
+  "version": "0.0.1",
+  "homepage": "https://github.com/FranciscoGutierrez/censusviz",
+  "authors": [
+    "franciscogutierrez <fsalvador23@gmail.com>"
+  ],
+  "description": "HTML5 Web components for graph metrics visualization.",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
