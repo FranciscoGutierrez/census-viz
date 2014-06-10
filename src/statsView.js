@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 /* Stats View Component.
-    * Universidad de las Américas Puebla http://ict.udlap.mx
-    * As part of REAUMOBILE project.
-    * Author: Francisco Gutiérrez (fsalvador23@gmail.com)
-    */
+ * Universidad de las Américas Puebla http://ict.udlap.mx
+ * As part of REAUMOBILE project.
+ * Author: Francisco Gutiérrez (fsalvador23@gmail.com)
+ */
 
 document.registerElement('stats-view', {
                          prototype: Object.create(HTMLElement.prototype)
@@ -46,14 +45,14 @@ var data = [{
             }, {
             "age": "Amigos Cercanos",
             "population": 500
-            }]
+            }];
 
 var width = 350,
 height = 250,
 radius = Math.min(width, height) / 2;
 
 var color = d3.scale.ordinal()
-.range(["#ff7686", "#ffeb07", "#20dd64", "#48a4ff"]);
+.range(["#ff8394", "#ffeb07", "#20dd64", "#48a4ff"]);
 
 var arc = d3.svg.arc()
 .outerRadius(radius - 30)
@@ -114,7 +113,10 @@ g.append("text")
       return d.data.population.toLocaleString() + " Amigos";
       });
 
-/*Events and stuff */
+/*
+ * Event handler: When document ready adds smooth fading effects.
+ * Objects affected: .stats-view-box, path, path.next(), path.next().next().
+ */
 $(document).ready(function () {
                   $(".stats-view-box").css("visibility", "hidden");
                   $("path").next().fadeOut(1200);
@@ -123,7 +125,9 @@ $(document).ready(function () {
                                                   $(".stats-view-box").addClass("animated slideInDown");
                                                   });
                   });
-
+/*
+ * Event handler:
+ */
 $("path").mouseenter(function () {
                      var color = $(this).css("fill");
                      $(this).next().fadeIn("fast");
@@ -132,10 +136,12 @@ $("path").mouseenter(function () {
                      var red = color.split(",")[0];
                      var gre = color.split(",")[1];
                      var blu = color.split(",")[2];
-                     $(this).css("fill", Lighthen(red, gre, blu));
+                     $(this).css("fill", Lighthen(red, gre, blu,0.95));
                      $(this).css("cursor", "pointer");
                      });
-
+/*
+ * Event handler:
+ */
 $("path").mouseleave(function () {
                      var color = $(this).css("fill");
                      $(this).next().fadeOut("fast");
@@ -144,10 +150,12 @@ $("path").mouseleave(function () {
                      var red = color.split(",")[0];
                      var gre = color.split(",")[1];
                      var blu = color.split(",")[2];
-                     $(this).css("fill", Darken(red, gre, blu));
+                     $(this).css("fill", Darken(red, gre, blu,0.95));
                      $(this).css("fill-opacity", "1");
                      });
-
+/*
+ * Event handler:
+ */
 $("stats-view").click(function () {
                       var color = $(this).css("fill");
                       $(".label").fadeIn(900, function () {
@@ -158,29 +166,46 @@ $("stats-view").click(function () {
                                               });
                       
                       });
-
-function Lighthen(red, green, blue) {
-    var multiplier = .95;
+/*
+ * Lighthens an object given an RGB color set.
+ * @param          red: The R-gb value.
+ * @param        green: The r-G-b value.
+ * @param         blue: The rG-B value.
+ * @param   multiplier: the value to lighthen the object
+ * @return  The Lighthen RGB color set.
+ */
+function Lighthen(red, green, blue, multiplier) {
     var r = Math.round(red * multiplier);
     var g = Math.round(green * multiplier);
     var b = Math.round(blue * multiplier);
     if (r > 255) r = 255;
     if (g > 255) g = 255;
     if (b > 255) b = 255;
-    return "rgb(" + r + "," + g + "," + b + ")";
+    return "rgb("+r+","+g+","+b+")";
 }
-
-function Darken(red, green, blue) {
-    var multiplier = .95;
+/*
+ * Darkens an object given an RGB color set.
+ * @param          red: The R-gb value.
+ * @param        green: The r-G-b value.
+ * @param         blue: The rG-B value.
+ * @param   multiplier: the value to darken the object
+ * @return  The Darkened RGB color set.
+ */
+function Darken(red, green, blue, multiplier) {
     var r = Math.round(red / multiplier);
     var g = Math.round(green / multiplier);
     var b = Math.round(blue / multiplier);
-    if (r > 255) r = 255;
-    if (g > 255) g = 255;
-    if (b > 255) b = 255;
-    return "rgb(" + r + "," + g + "," + b + ")";
+    if (r < 0) r = 0;
+    if (g < 0) g = 0;
+    if (b < 0) b = 0;
+    return "rgb("+r+","+g+","+b+")";
 }
-
+/*
+ * Rotates the text around the Pie chart given start and end angles
+ * @param start: the start angle.
+ * @param   end: the end angle.
+ * @return  the angle where the text should be around the pie chart.
+ */
 function rotateText(start, end) {
     return (start + end) / 2 * (180 / Math.PI);
 }
