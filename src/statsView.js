@@ -26,7 +26,6 @@
  * As part of REAUMOBILE project.
  * Author: Francisco Gutiérrez (fsalvador23@gmail.com)
  */
-
 document.registerElement('stats-view', {
                          prototype: Object.create(HTMLElement.prototype)
                          });
@@ -77,6 +76,7 @@ var g = svg.selectAll(".arc")
 
 g.append("path")
 .attr("d", arc)
+.attr("class", "path")
 .style("fill", function (d) {
        return color(d.data.age);
        });
@@ -86,9 +86,8 @@ g.append("text")
 .attr("transform", function (d) {
       var dist = radius - 20;
       angle = (d.startAngle + d.endAngle) / 2; // Middle of wedge
-      x = dist * Math.sin(angle);
-      y = -dist * Math.cos(angle);
-      var rotate = rotateText(d.startAngle, d.endAngle);
+      x = 1.28; //dist * Math.sin(angle); //Turn me on to around the pie.
+      y = 105; //-dist * Math.cos(angle); //Turn me on to around the pie.
       return "translate(" + x + "," + y + ")";
       })
 .attr("dy", "0.35em")
@@ -102,9 +101,8 @@ g.append("text")
 .attr("transform", function (d) {
       var dist = radius - 20;
       angle = (d.startAngle + d.endAngle) / 2;
-      x = dist * Math.sin(angle);
-      y = -dist * Math.cos(angle);
-      var rotate = rotateText(d.startAngle, d.endAngle);
+      x = 1.28; //dist * Math.sin(angle); //Turn me on to around the pie.
+      y = 105; //-dist * Math.cos(angle); //Turn me on to around the pie.
       return "translate(" + x + "," + y + ")";
       })
 .attr("dy", "1.75em")
@@ -118,25 +116,27 @@ g.append("text")
  * Objects affected: .stats-view-box, path, path.next(), path.next().next().
  */
 $(document).ready(function () {
-                  $(".stats-view-box").css("visibility", "hidden");
-                  $("path").next().fadeOut(1200);
-                  $("path").next().next().fadeOut(1200, function () {
-                                                  $(".stats-view-box").css("visibility", "visible");
-                                                  $(".stats-view-box").addClass("animated slideInDown");
-                                                  });
+                  $("path").next().css("visibility", "hidden");
+                  $("path").next().next().css("visibility", "hidden");
+                  $(".stats-view-box").css("visibility", "visible");
+                  $(".stats-view-box").addClass("animated slideInDown");
+                  $(".stats-view-container").css("visibility", "visible");
+                  $(".stats-view-container").addClass("animated fadeInDown");
                   });
 /*
  * Event handler:
  */
 $("path").mouseenter(function () {
                      var color = $(this).css("fill");
-                     $(this).next().fadeIn("fast");
-                     $(this).next().next().fadeIn("fast");
+                     $(this).next().css("visibility", "visible");
+                     $(this).next().next().css("visibility", "visible");
+                     $(this).next().fadeIn(200);
+                     $(this).next().next().fadeIn(200);
                      color = color.replace(/[^0-9,]+/g, "");
                      var red = color.split(",")[0];
                      var gre = color.split(",")[1];
                      var blu = color.split(",")[2];
-                     $(this).css("fill", Lighthen(red, gre, blu,0.95));
+                     $(this).css("fill", Lighthen(red, gre, blu, 0.85));
                      $(this).css("cursor", "pointer");
                      });
 /*
@@ -144,35 +144,28 @@ $("path").mouseenter(function () {
  */
 $("path").mouseleave(function () {
                      var color = $(this).css("fill");
-                     $(this).next().fadeOut("fast");
-                     $(this).next().next().fadeOut("fast");
+                     $(this).next().fadeOut(200);
+                     $(this).next().next().fadeOut(200);
                      color = color.replace(/[^0-9,]+/g, "");
                      var red = color.split(",")[0];
                      var gre = color.split(",")[1];
                      var blu = color.split(",")[2];
-                     $(this).css("fill", Darken(red, gre, blu,0.95));
+                     $(this).css("fill", Darken(red, gre, blu, 0.85));
                      $(this).css("fill-opacity", "1");
                      });
 /*
  * Event handler:
  */
-$("stats-view").click(function () {
-                      var color = $(this).css("fill");
-                      $(".label").fadeIn(900, function () {
-                                         $(".label").fadeOut(900);
-                                         });
-                      $(".label-meta").fadeIn(900, function () {
-                                              $(".label-meta").fadeOut(900);
-                                              });
-                      
-                      });
+$("path").click(function () {
+                secondViewTrigger(this);
+                });
 /*
  * Lighthens an object given an RGB color set.
  * @param          red: The R-gb value.
  * @param        green: The r-G-b value.
  * @param         blue: The rG-B value.
  * @param   multiplier: the value to lighthen the object
- * @return  The Lighthen RGB color set.
+ * @return  The Lighthen Hex (could be RGB) color set.
  */
 function Lighthen(red, green, blue, multiplier) {
     var r = Math.round(red * multiplier);
@@ -181,7 +174,8 @@ function Lighthen(red, green, blue, multiplier) {
     if (r > 255) r = 255;
     if (g > 255) g = 255;
     if (b > 255) b = 255;
-    return "rgb("+r+","+g+","+b+")";
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    //return "rgb(" + r + "," + g + "," + b + ")";
 }
 /*
  * Darkens an object given an RGB color set.
@@ -189,7 +183,7 @@ function Lighthen(red, green, blue, multiplier) {
  * @param        green: The r-G-b value.
  * @param         blue: The rG-B value.
  * @param   multiplier: the value to darken the object
- * @return  The Darkened RGB color set.
+ * @return  The Darkened Hex (could be RGB) color set.
  */
 function Darken(red, green, blue, multiplier) {
     var r = Math.round(red / multiplier);
@@ -198,7 +192,8 @@ function Darken(red, green, blue, multiplier) {
     if (r < 0) r = 0;
     if (g < 0) g = 0;
     if (b < 0) b = 0;
-    return "rgb("+r+","+g+","+b+")";
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    //return "rgb(" + r + "," + g + "," + b + ")";
 }
 /*
  * Rotates the text around the Pie chart given start and end angles
@@ -209,3 +204,93 @@ function Darken(red, green, blue, multiplier) {
 function rotateText(start, end) {
     return (start + end) / 2 * (180 / Math.PI);
 }
+
+function secondViewTrigger(path) {
+    var background = "url(http://goo.gl/zFISca) no-repeat center center";
+    var color = $(path).css("fill");
+    color = color.replace(/[^0-9,]+/g, "");
+    var red = color.split(",")[0];
+    var gre = color.split(",")[1];
+    var blu = color.split(",")[2];
+    var darken = Darken(red, gre, blu, 0.85);
+    $(".stats-view-graphic").css("visibility", "hidden");
+    $(".stats-view-title").fadeOut("fast");
+    $(".stats-view-meta").fadeOut("fast");
+    /* Append the new elements */
+    $(".stats-view-container").append("<div class=\"stats-view-nav\"></div>");
+    $(".stats-view-container").append("<div class=\"stats-view-list\"></div>");
+    $(".stats-view-list").append("<div class=\"stats-view-box\"></div>");
+    $(".stats-view-nav").append("<div class=\"stats-view-minpic\">")
+    $(".stats-view-nav").append("<div class=\"stats-view-textnav\">")
+    $(".stats-view-textnav").append("<div class=\"stats-view-mintitle\">")
+    $(".stats-view-textnav").append("<div class=\"stats-view-minmeta\">")
+    /* Style the minpic */
+    $(".stats-view-minpic").css("background",background);
+    $(".stats-view-minpic").css("background-size","40px");
+    $(".stats-view-minpic").css("color", "#fff");
+    $(".stats-view-minpic").css("text-align", "center");
+    $(".stats-view-minpic").css("font-weight", "bold");
+    $(".stats-view-minpic").css("font-family", "Courier New");
+    $(".stats-view-minpic").css("font-size", "25px");
+    $(".stats-view-minpic").css("line-height", "43px");
+    $(".stats-view-minpic").css("width", "40px");
+    $(".stats-view-minpic").css("height", "40px");
+    $(".stats-view-minpic").css("border","8px "+darken+" solid");
+    $(".stats-view-minpic").css("border-radius", "40px");
+    $(".stats-view-minpic").css("cursor", "pointer");
+    
+    $(".stats-view-nav").css("text-align","left");
+    $(".stats-view-mintitle").append($(".stats-view-title").html());
+    $(".stats-view-mintitle").css("font-size","16px");
+    $(".stats-view-minmeta").append($(".stats-view-meta").html());
+    $(".stats-view-minmeta").css("font-size","10px");
+    $(".stats-view-minmeta").css("color","gray");
+    
+    $(".stats-view-nav").css("top","0");
+    $(".stats-view-nav").css("margin","10px");
+    $(".stats-view-nav").css("position","absolute");
+    $(".stats-view-minpic").css("float","left");
+    $(".stats-view-textnav").css("float","left");
+    $(".stats-view-textnav").css("margin","10px");
+    
+}
+
+$("stats-view").on('mouseenter', '.stats-view-minpic', function () {
+                   $(this).css("box-shadow", "inset 0px 0px 15px #000");
+                   $(this).next().css("text-decoration", "underline");
+                   $(this).next().css("cursor", "pointer");
+                   });
+
+$("stats-view").on('mouseleave', '.stats-view-textnav', function () {
+                   $(".stats-view-minpic").css("box-shadow", "none");
+                   $(this).css("text-decoration", "none");
+                   });
+
+$("stats-view").on('mouseenter', '.stats-view-textnav', function () {
+                   $(".stats-view-minpic").css("box-shadow", "inset 0px 0px 15px #000");
+                   $(this).css("text-decoration", "underline");
+                   $(this).css("cursor", "pointer");
+                   });
+
+$("stats-view").on('mouseleave', '.stats-view-minpic', function () {
+                   $(this).css("box-shadow", "none");
+                   $(this).next().css("text-decoration", "none");
+                   });
+
+$("stats-view").on('click', '.stats-view-minpic', function () {
+                   $(".stats-view-graphic").css("visibility", "visible");
+                   $(".stats-view-title").fadeIn("fast");
+                   $(".stats-view-meta").fadeIn("fast");
+                   $(".stats-view-nav").fadeOut("fast", function () {
+                                                $(this).remove();
+                                                });
+                   });
+
+$("stats-view").on('click', '.stats-view-textnav', function () {
+                   $(".stats-view-graphic").css("visibility", "visible");
+                   $(".stats-view-title").fadeIn("fast");
+                   $(".stats-view-meta").fadeIn("fast");
+                   $(".stats-view-nav").fadeOut("fast", function () {
+                                                $(this).remove();
+                                                });
+                   });
