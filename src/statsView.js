@@ -27,45 +27,35 @@
  * Author: Francisco Gutiérrez (fsalvador23@gmail.com)
  */
 document.registerElement('stats-view', {
-                         prototype: Object.create(HTMLElement.prototype)
-                         });
+                            prototype: Object.create(HTMLElement.prototype)
+                            });
 
-var data = "http://www.json-generator.com/api/json/get/caUsLrljkO?indent=2";
-// = $("stats-view").attr("data");
-/*
- d3.json(data, function(json) {
- data = json;
- });*/
-var jsondata; // a global
-d3.json(data, function(json) {
-        jsondata = json;
-        });
-
-$.getJSON(data, function(data) {
-          alert(data.userLocalStats.picture);
+var jsonData;
+$.getJSON($("stats-view").attr("data"), function (json) {
+          jsonData = json;
           });
-/*
- var data = [
- {
- "age": "Amigos Interesantes",
- "population": 1200
- },
- {
- "age": "Líderes de Opinión",
- "population": 200
- },
- {
- "age": "Amigos Lejanos",
- "population": 700
- },
- {
- "age": "Amigos Cercanos",
- "population": 500
- }];
- */
+
+var data = [
+            {
+            "metric": "Amigos Interesantes",
+            "population": 1200
+            },
+            {
+            "metric": "Líderes de Opinión",
+            "population": 200
+            },
+            {
+            "metric": "Amigos Lejanos",
+            "population": 700
+            },
+            {
+            "metric": "Amigos Cercanos",
+            "population": 500
+            }];
+
 var width = 350,
 height = 250,
-radius = Math.min(width, height) / 2;
+radius = Math.min(width, height)/2;
 
 var color = d3.scale.ordinal()
 .range(["#ff8394", "#ffeb07", "#20dd64", "#48a4ff"]);
@@ -84,10 +74,10 @@ var svg = d3.select(".stats-view-graphic").append("svg")
 .attr("width", width)
 .attr("height", height)
 .append("g")
-.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+.attr("transform","translate("+width/2+","+height/2+")");
 
 var g = svg.selectAll(".arc")
-.data(pie(jsondata))
+.data(pie(data))
 .enter().append("g")
 .attr("class", "arc");
 
@@ -95,7 +85,7 @@ g.append("path")
 .attr("d", arc)
 .attr("class", "path")
 .style("fill", function (d) {
-       return color(jsondata.userLocalStats.d3PieChart.metric);
+       return color(d.data.metric);
        });
 
 g.append("text")
@@ -110,11 +100,11 @@ g.append("text")
 .attr("dy", "0.35em")
 .attr("text-anchor", "middle")
 .text(function (d) {
-      return jsondata.userLocalStats.d3PieChart.metric;
+      return d.data.metric;
       });
 
 g.append("text")
-.attr("class", "label-meta")
+.attr("class","label-meta")
 .attr("transform", function (d) {
       var dist = radius - 20;
       angle = (d.startAngle + d.endAngle) / 2;
@@ -122,10 +112,10 @@ g.append("text")
       y = 105; //-dist * Math.cos(angle); //Turn me on to around the pie.
       return "translate(" + x + "," + y + ")";
       })
-.attr("dy", "1.75em")
-.attr("text-anchor", "middle")
+.attr("dy","1.75em")
+.attr("text-anchor","middle")
 .text(function (d) {
-      return data.userLocalStats.d3PieChart.population.toLocaleString() + " Amigos";
+      return d.data.population.toLocaleString()+" Amigos";
       });
 
 /*
