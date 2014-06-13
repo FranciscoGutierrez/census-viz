@@ -1,0 +1,57 @@
+{
+userLocalStats: [
+                 '{{repeat(1)}}',
+                 {
+                 guid: '{{guid()}}',
+                 name: '{{firstName()}} {{surname()}}',
+                 picture: 'http://placehold.it/42x42',
+                 company: '{{company()}}',
+                 location: '{{city()}}, {{state()}}',
+                 localNetwork: [
+                                '{{repeat(1)}}',
+                                {
+                                keyPeople:	[
+                                             '{{repeat(5)}}',
+                                             {
+                                             guid: '{{guid()}}',
+                                             name: '{{firstName()}} {{surname()}}',
+                                             picture: 'http://placehold.it/42x42',
+                                             company: '{{company()}}',
+                                             location: '{{city()}}, {{state()}}'
+                                             }
+                                             ],
+                                closeFriends:	[
+                                                 '{{repeat(5)}}',
+                                                 {
+                                                 guid: '{{guid()}}',
+                                                 name: '{{firstName()}} {{surname()}}',
+                                                 picture: 'http://placehold.it/42x42',
+                                                 company: '{{company()}}',
+                                                 location: '{{city()}}, {{state()}}'
+                                                 }
+                                                 ],
+                                farFriends:	[
+                                             '{{repeat(5)}}',
+                                             {
+                                             guid: '{{guid()}}',
+                                             name: '{{firstName()}} {{surname()}}',
+                                             picture: 'http://placehold.it/42x42',
+                                             company: '{{company()}}',
+                                             location: '{{city()}}, {{state()}}'
+                                             }
+                                             ],
+                                opinionLeaders:	[
+                                                 '{{repeat(5)}}',
+                                                 {
+                                                 guid: '{{guid()}}',
+                                                 name: '{{firstName()}} {{surname()}}',
+                                                 picture: 'http://placehold.it/42x42',
+                                                 company: '{{company()}}',
+                                                 location: '{{city()}}, {{state()}}'
+                                                 }
+                                                 ]
+                                }
+                                ]
+                 }
+                 ]
+}

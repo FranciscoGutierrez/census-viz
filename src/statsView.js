@@ -30,22 +30,39 @@ document.registerElement('stats-view', {
                          prototype: Object.create(HTMLElement.prototype)
                          });
 
-var jsonData = $("stats-view").attr("data");
+var data = "http://www.json-generator.com/api/json/get/caUsLrljkO?indent=2";
+// = $("stats-view").attr("data");
+/*
+ d3.json(data, function(json) {
+ data = json;
+ });*/
+var jsondata; // a global
+d3.json(data, function(json) {
+        jsondata = json;
+        });
 
-var data = [{
-            "age": "Amigos Interesantes",
-            "population": 1200
-            }, {
-            "age": "Líderes de Opinión",
-            "population": 200
-            }, {
-            "age": "Amigos Lejanos",
-            "population": 700
-            }, {
-            "age": "Amigos Cercanos",
-            "population": 500
-            }];
-
+$.getJSON(data, function(data) {
+          alert(data.userLocalStats.picture);
+          });
+/*
+ var data = [
+ {
+ "age": "Amigos Interesantes",
+ "population": 1200
+ },
+ {
+ "age": "Líderes de Opinión",
+ "population": 200
+ },
+ {
+ "age": "Amigos Lejanos",
+ "population": 700
+ },
+ {
+ "age": "Amigos Cercanos",
+ "population": 500
+ }];
+ */
 var width = 350,
 height = 250,
 radius = Math.min(width, height) / 2;
@@ -70,7 +87,7 @@ var svg = d3.select(".stats-view-graphic").append("svg")
 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 var g = svg.selectAll(".arc")
-.data(pie(data))
+.data(pie(jsondata))
 .enter().append("g")
 .attr("class", "arc");
 
@@ -78,7 +95,7 @@ g.append("path")
 .attr("d", arc)
 .attr("class", "path")
 .style("fill", function (d) {
-       return color(d.data.age);
+       return color(jsondata.userLocalStats.d3PieChart.metric);
        });
 
 g.append("text")
@@ -93,7 +110,7 @@ g.append("text")
 .attr("dy", "0.35em")
 .attr("text-anchor", "middle")
 .text(function (d) {
-      return d.data.age;
+      return jsondata.userLocalStats.d3PieChart.metric;
       });
 
 g.append("text")
@@ -108,7 +125,7 @@ g.append("text")
 .attr("dy", "1.75em")
 .attr("text-anchor", "middle")
 .text(function (d) {
-      return d.data.population.toLocaleString() + " Amigos";
+      return data.userLocalStats.d3PieChart.population.toLocaleString() + " Amigos";
       });
 
 /*
@@ -219,14 +236,14 @@ function secondViewTrigger(path) {
     /* Append the new elements */
     $(".stats-view-container").append("<div class=\"stats-view-nav\"></div>");
     $(".stats-view-container").append("<div class=\"stats-view-list\"></div>");
-    $(".stats-view-list").append("<div class=\"stats-view-box\"></div>");
-    $(".stats-view-nav").append("<div class=\"stats-view-minpic\">")
-    $(".stats-view-nav").append("<div class=\"stats-view-textnav\">")
-    $(".stats-view-textnav").append("<div class=\"stats-view-mintitle\">")
-    $(".stats-view-textnav").append("<div class=\"stats-view-minmeta\">")
+    $(".stats-view-list").append("<div class=\"stats-view-minbox\"></div>");
+    $(".stats-view-nav").append("<div class=\"stats-view-minpic\">");
+    $(".stats-view-nav").append("<div class=\"stats-view-textnav\">");
+    $(".stats-view-textnav").append("<div class=\"stats-view-mintitle\">");
+    $(".stats-view-textnav").append("<div class=\"stats-view-minmeta\">");
     /* Style the minpic */
-    $(".stats-view-minpic").css("background",background);
-    $(".stats-view-minpic").css("background-size","40px");
+    $(".stats-view-minpic").css("background", background);
+    $(".stats-view-minpic").css("background-size", "40px");
     $(".stats-view-minpic").css("color", "#fff");
     $(".stats-view-minpic").css("text-align", "center");
     $(".stats-view-minpic").css("font-weight", "bold");
@@ -235,23 +252,26 @@ function secondViewTrigger(path) {
     $(".stats-view-minpic").css("line-height", "43px");
     $(".stats-view-minpic").css("width", "40px");
     $(".stats-view-minpic").css("height", "40px");
-    $(".stats-view-minpic").css("border","8px "+darken+" solid");
+    $(".stats-view-minpic").css("border", "8px " + darken + " solid");
     $(".stats-view-minpic").css("border-radius", "40px");
     $(".stats-view-minpic").css("cursor", "pointer");
     
-    $(".stats-view-nav").css("text-align","left");
-    $(".stats-view-mintitle").append($(".stats-view-title").html());
-    $(".stats-view-mintitle").css("font-size","16px");
-    $(".stats-view-minmeta").append($(".stats-view-meta").html());
-    $(".stats-view-minmeta").css("font-size","10px");
-    $(".stats-view-minmeta").css("color","gray");
+    $(".stats-view-minbox").css("border", "1px solid #c1c1c1");
+    $(".stats-view-minbox").css("border-radius", "3px");
     
-    $(".stats-view-nav").css("top","0");
-    $(".stats-view-nav").css("margin","10px");
-    $(".stats-view-nav").css("position","absolute");
-    $(".stats-view-minpic").css("float","left");
-    $(".stats-view-textnav").css("float","left");
-    $(".stats-view-textnav").css("margin","10px");
+    $(".stats-view-nav").css("text-align", "left");
+    $(".stats-view-mintitle").append($(".stats-view-title").html());
+    $(".stats-view-mintitle").css("font-size", "16px");
+    $(".stats-view-minmeta").append($(".stats-view-meta").html());
+    $(".stats-view-minmeta").css("font-size", "10px");
+    $(".stats-view-minmeta").css("color", "gray");
+    
+    $(".stats-view-nav").css("top", "0");
+    $(".stats-view-nav").css("margin", "10px");
+    $(".stats-view-nav").css("position", "absolute");
+    $(".stats-view-minpic").css("float", "left");
+    $(".stats-view-textnav").css("float", "left");
+    $(".stats-view-textnav").css("margin", "10px");
     
 }
 
@@ -281,8 +301,11 @@ $("stats-view").on('click', '.stats-view-minpic', function () {
                    $(".stats-view-graphic").css("visibility", "visible");
                    $(".stats-view-title").fadeIn("fast");
                    $(".stats-view-meta").fadeIn("fast");
+                   $(".stats-view-list").remove();
+                   $(".stats-view-minbox").remove();
                    $(".stats-view-nav").fadeOut("fast", function () {
                                                 $(this).remove();
+                                                
                                                 });
                    });
 
@@ -290,6 +313,8 @@ $("stats-view").on('click', '.stats-view-textnav', function () {
                    $(".stats-view-graphic").css("visibility", "visible");
                    $(".stats-view-title").fadeIn("fast");
                    $(".stats-view-meta").fadeIn("fast");
+                   $(".stats-view-list").remove();
+                   $(".stats-view-minbox").remove();
                    $(".stats-view-nav").fadeOut("fast", function () {
                                                 $(this).remove();
                                                 });

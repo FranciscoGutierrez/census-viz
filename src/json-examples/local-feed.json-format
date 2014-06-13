@@ -1,0 +1,52 @@
+{
+keyPeople: [
+            '{{repeat(5)}}',
+            {
+            guid: '{{guid()}}',
+            name: '{{firstName()}} {{surname()}}',
+            picture: 'http://placehold.it/42x42',
+            company: '{{company()}}',
+            location: '{{city()}}, {{state()}}'
+            }
+            ],
+opinionLeaders: [
+                 '{{repeat(5)}}',
+                 {
+                 guid: '{{guid()}}',
+                 name: '{{firstName()}} {{surname()}}',
+                 picture: 'http://placehold.it/42x42',
+                 company: '{{company()}}',
+                 location: '{{city()}}, {{state()}}'
+                 }
+                 ],
+peopleAway: [
+             '{{repeat(5)}}',
+             {
+             guid: '{{guid()}}',
+             name: '{{firstName()}} {{surname()}}',
+             picture: 'http://placehold.it/42x42',
+             company: '{{company()}}',
+             location: '{{city()}}, {{state()}}'
+             }
+             ],
+mayKnow: [
+          '{{repeat(5)}}',
+          {
+          guid: '{{guid()}}',
+          name: '{{firstName()}} {{surname()}}',
+          picture: 'http://placehold.it/42x42',
+          company: '{{company()}}',
+          location: '{{city()}}, {{state()}}'
+          }
+          ],
+shouldKnow: [
+             '{{repeat(5)}}',
+             {
+             guid: '{{guid()}}',
+             name: '{{firstName()}} {{surname()}}',
+             picture: 'http://placehold.it/42x42',
+             company: '{{company()}}',
+             location: '{{city()}}, {{state()}}'
+             }
+             ]
+}
