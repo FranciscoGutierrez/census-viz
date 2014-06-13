@@ -27,38 +27,37 @@
  * Author: Francisco Gutiérrez (fsalvador23@gmail.com)
  */
 document.registerElement('stats-view', {
-                            prototype: Object.create(HTMLElement.prototype)
-                            });
+                         prototype: Object.create(HTMLElement.prototype)
+                         });
+var url = $("stats-view").attr("data");
+var data;
+var json;
 
-var jsonData;
-$.getJSON($("stats-view").attr("data"), function (json) {
-          jsonData = json;
-          });
-
-var data = [
-            {
-            "metric": "Amigos Interesantes",
-            "population": 1200
-            },
-            {
-            "metric": "Líderes de Opinión",
-            "population": 200
-            },
-            {
-            "metric": "Amigos Lejanos",
-            "population": 700
-            },
-            {
-            "metric": "Amigos Cercanos",
-            "population": 500
-            }];
+d3.json(url, function (error, jsondata) {
+        if (error) return console.warn(error);
+        json = jsondata;
+        data = [{
+                "metric": "Amigos Interesantes",
+                "population": json.userLocalStats.d3PieChart[0].population
+                }, {
+                "metric": "Líderes de Opinión",
+                "population": json.userLocalStats.d3PieChart[1].population
+                }, {
+                "metric": "Amigos Lejanos",
+                "population": json.userLocalStats.d3PieChart[2].population
+                }, {
+                "metric": "Amigos Cercanos",
+                "population": json.userLocalStats.d3PieChart[3].population
+                }];
+        visualizePieChart();
+        });
 
 var width = 350,
 height = 250,
 radius = Math.min(width, height)/2;
 
 var color = d3.scale.ordinal()
-.range(["#ff8394", "#ffeb07", "#20dd64", "#48a4ff"]);
+.range(["#ff8394","#ffeb07","#20dd64","#48a4ff"]);
 
 var arc = d3.svg.arc()
 .outerRadius(radius - 30)
@@ -74,98 +73,103 @@ var svg = d3.select(".stats-view-graphic").append("svg")
 .attr("width", width)
 .attr("height", height)
 .append("g")
-.attr("transform","translate("+width/2+","+height/2+")");
+.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-var g = svg.selectAll(".arc")
-.data(pie(data))
-.enter().append("g")
-.attr("class", "arc");
-
-g.append("path")
-.attr("d", arc)
-.attr("class", "path")
-.style("fill", function (d) {
-       return color(d.data.metric);
-       });
-
-g.append("text")
-.attr("class", "label")
-.attr("transform", function (d) {
-      var dist = radius - 20;
-      angle = (d.startAngle + d.endAngle) / 2; // Middle of wedge
-      x = 1.28; //dist * Math.sin(angle); //Turn me on to around the pie.
-      y = 105; //-dist * Math.cos(angle); //Turn me on to around the pie.
-      return "translate(" + x + "," + y + ")";
-      })
-.attr("dy", "0.35em")
-.attr("text-anchor", "middle")
-.text(function (d) {
-      return d.data.metric;
-      });
-
-g.append("text")
-.attr("class","label-meta")
-.attr("transform", function (d) {
-      var dist = radius - 20;
-      angle = (d.startAngle + d.endAngle) / 2;
-      x = 1.28; //dist * Math.sin(angle); //Turn me on to around the pie.
-      y = 105; //-dist * Math.cos(angle); //Turn me on to around the pie.
-      return "translate(" + x + "," + y + ")";
-      })
-.attr("dy","1.75em")
-.attr("text-anchor","middle")
-.text(function (d) {
-      return d.data.population.toLocaleString()+" Amigos";
-      });
-
-/*
- * Event handler: When document ready adds smooth fading effects.
- * Objects affected: .stats-view-box, path, path.next(), path.next().next().
- */
-$(document).ready(function () {
-                  $("path").next().css("visibility", "hidden");
-                  $("path").next().next().css("visibility", "hidden");
-                  $(".stats-view-box").css("visibility", "visible");
-                  $(".stats-view-box").addClass("animated slideInDown");
-                  $(".stats-view-container").css("visibility", "visible");
-                  $(".stats-view-container").addClass("animated fadeInDown");
-                  });
-/*
- * Event handler:
- */
-$("path").mouseenter(function () {
-                     var color = $(this).css("fill");
-                     $(this).next().css("visibility", "visible");
-                     $(this).next().next().css("visibility", "visible");
-                     $(this).next().fadeIn(200);
-                     $(this).next().next().fadeIn(200);
-                     color = color.replace(/[^0-9,]+/g, "");
-                     var red = color.split(",")[0];
-                     var gre = color.split(",")[1];
-                     var blu = color.split(",")[2];
-                     $(this).css("fill", Lighthen(red, gre, blu, 0.85));
-                     $(this).css("cursor", "pointer");
-                     });
-/*
- * Event handler:
- */
-$("path").mouseleave(function () {
-                     var color = $(this).css("fill");
-                     $(this).next().fadeOut(200);
-                     $(this).next().next().fadeOut(200);
-                     color = color.replace(/[^0-9,]+/g, "");
-                     var red = color.split(",")[0];
-                     var gre = color.split(",")[1];
-                     var blu = color.split(",")[2];
-                     $(this).css("fill", Darken(red, gre, blu, 0.85));
-                     $(this).css("fill-opacity", "1");
-                     });
-/*
- * Event handler:
- */
-$("path").click(function () {
-                secondViewTrigger(this);
-                });
+function visualizePieChart() {
+    
+    var g = svg.selectAll(".arc")
+    .data(pie(data))
+    .enter().append("g")
+    .attr("class", "arc");
+    
+    g.append("path")
+    .attr("d", arc)
+    .attr("class", "path")
+    .style("fill", function (d) {
+           return color(d.data.metric);
+           
+           });
+    
+    g.append("text")
+    .attr("class", "label")
+    .attr("transform", function (d) {
+          var dist = radius - 20;
+          angle = (d.startAngle + d.endAngle) / 2; // Middle of wedge
+          x = 1.28; //dist * Math.sin(angle); //Around the pie.
+          y = 105; //-dist * Math.cos(angle); //Around the pie.
+          return "translate(" + x + "," + y + ")";
+          })
+    .attr("dy", "0.35em")
+    .attr("text-anchor", "middle")
+    .text(function (d) {
+          return d.data.metric;
+          });
+    
+    g.append("text")
+    .attr("class", "label-meta")
+    .attr("transform", function (d) {
+          var dist = radius - 20;
+          angle = (d.startAngle + d.endAngle) / 2;
+          x = 1.28; //dist * Math.sin(angle); //Turn me on to around the pie.
+          y = 105; //-dist * Math.cos(angle); //Turn me on to around the pie.
+          return "translate(" + x + "," + y + ")";
+          })
+    .attr("dy", "1.75em")
+    .attr("text-anchor", "middle")
+    .text(function (d) {
+          return d.data.population.toLocaleString() + " Amigos";
+          });
+    
+    /*
+     * Event handler: When document ready adds smooth fading effects.
+     * Objects affected: .stats-view-box, path, path.next(), path.next().next().
+     */
+    $(document).ready(function () {
+                      $("path").next().css("visibility", "hidden");
+                      $("path").next().next().css("visibility", "hidden");
+                      $(".stats-view-box").css("visibility", "visible");
+                      $(".stats-view-box").addClass("animated slideInDown");
+                      $(".stats-view-container").css("visibility", "visible");
+                      $(".stats-view-container").addClass("animated fadeInDown");
+                      });
+    /*
+     * Event handler:
+     */
+    $("path").mouseenter(function () {
+                         var color = $(this).css("fill");
+                         $(this).next().css("visibility", "visible");
+                         $(this).next().next().css("visibility", "visible");
+                         $(this).next().fadeIn(200);
+                         $(this).next().next().fadeIn(200);
+                         color = color.replace(/[^0-9,]+/g, "");
+                         var red = color.split(",")[0];
+                         var gre = color.split(",")[1];
+                         var blu = color.split(",")[2];
+                         $(this).css("fill", Lighthen(red, gre, blu, 0.85));
+                         $(this).css("cursor", "pointer");
+                         });
+    /*
+     * Event handler:
+     */
+    $("path").mouseleave(function () {
+                         var color = $(this).css("fill");
+                         $(this).next().fadeOut(200);
+                         $(this).next().next().fadeOut(200);
+                         color = color.replace(/[^0-9,]+/g, "");
+                         var red = color.split(",")[0];
+                         var gre = color.split(",")[1];
+                         var blu = color.split(",")[2];
+                         $(this).css("fill", Darken(red, gre, blu, 0.85));
+                         $(this).css("fill-opacity", "1");
+                         });
+    /*
+     * Event handler:
+     */
+    $("path").click(function () {
+                    secondViewTrigger(this);
+                    });
+    
+} // End of visualizePieChart(){}
 /*
  * Lighthens an object given an RGB color set.
  * @param          red: The R-gb value.
