@@ -32,8 +32,13 @@ document.registerElement('stats-view', {
 var url = $("stats-view").attr("data");
 var data;
 var json;
-
+$("stats-view").append("<div class=\"stats-view-container\"></div>");
+$(".stats-view-container").append("<div class=\"stats-view-graphic\"></div>");
+$(".stats-view-container").append("<div class=\"stats-view-box\"></div>");
+$(".stats-view-box").append("<div class=\"stats-view-title\"></div>");
+$(".stats-view-box").append("<div class=\"stats-view-meta\"></div>");
 d3.json(url, function (error, jsondata) {
+        var background;
         if (error) return console.warn(error);
         json = jsondata;
         data = [{
@@ -49,15 +54,20 @@ d3.json(url, function (error, jsondata) {
                 "metric": "Amigos Cercanos",
                 "population": json.userLocalStats.d3PieChart[3].population
                 }];
+        background = "url(" + json.userLocalStats.picture + ") no-repeat center center";
+        $(".stats-view-graphic").css("background", background);
+        $(".stats-view-graphic").css("background-size", "110px");
+        $(".stats-view-title").text(json.userLocalStats.name);
+        $(".stats-view-meta").text(json.userLocalStats.location);
         visualizePieChart();
         });
 
 var width = 350,
 height = 250,
-radius = Math.min(width, height)/2;
+radius = Math.min(width, height) / 2;
 
 var color = d3.scale.ordinal()
-.range(["#ff8394","#ffeb07","#20dd64","#48a4ff"]);
+.range(["#ff8394", "#ffeb07", "#20dd64", "#48a4ff"]);
 
 var arc = d3.svg.arc()
 .outerRadius(radius - 30)
@@ -68,6 +78,8 @@ var pie = d3.layout.pie()
 .value(function (d) {
        return d.population;
        });
+var fixedWidth = width;
+var fixedHeight = height - 62;
 
 var svg = d3.select(".stats-view-graphic").append("svg")
 .attr("width", width)
@@ -76,12 +88,10 @@ var svg = d3.select(".stats-view-graphic").append("svg")
 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 function visualizePieChart() {
-    
     var g = svg.selectAll(".arc")
     .data(pie(data))
     .enter().append("g")
     .attr("class", "arc");
-    
     g.append("path")
     .attr("d", arc)
     .attr("class", "path")
@@ -89,7 +99,6 @@ function visualizePieChart() {
            return color(d.data.metric);
            
            });
-    
     g.append("text")
     .attr("class", "label")
     .attr("transform", function (d) {
@@ -104,7 +113,6 @@ function visualizePieChart() {
     .text(function (d) {
           return d.data.metric;
           });
-    
     g.append("text")
     .attr("class", "label-meta")
     .attr("transform", function (d) {
@@ -119,7 +127,6 @@ function visualizePieChart() {
     .text(function (d) {
           return d.data.population.toLocaleString() + " Amigos";
           });
-    
     /*
      * Event handler: When document ready adds smooth fading effects.
      * Objects affected: .stats-view-box, path, path.next(), path.next().next().
@@ -128,9 +135,8 @@ function visualizePieChart() {
                       $("path").next().css("visibility", "hidden");
                       $("path").next().next().css("visibility", "hidden");
                       $(".stats-view-box").css("visibility", "visible");
-                      $(".stats-view-box").addClass("animated slideInDown");
+                      $(".stats-view-box").addClass("animated flipInX");
                       $(".stats-view-container").css("visibility", "visible");
-                      $(".stats-view-container").addClass("animated fadeInDown");
                       });
     /*
      * Event handler:
@@ -217,24 +223,22 @@ function rotateText(start, end) {
 }
 
 function secondViewTrigger(path) {
-    var background = "url(http://goo.gl/zFISca) no-repeat center center";
+    var picture = json.userLocalStats.picture
+    var background = "url(" + picture + ") no-repeat center center";
     var color = $(path).css("fill");
     color = color.replace(/[^0-9,]+/g, "");
     var red = color.split(",")[0];
     var gre = color.split(",")[1];
     var blu = color.split(",")[2];
     var darken = Darken(red, gre, blu, 0.85);
-    $(".stats-view-graphic").css("visibility", "hidden");
-    $(".stats-view-title").fadeOut("fast");
-    $(".stats-view-meta").fadeOut("fast");
+    $(".stats-view-graphic").css("display", "none");
+    $(".stats-view-box").css("display", "none");
     /* Append the new elements */
     $(".stats-view-container").append("<div class=\"stats-view-nav\"></div>");
-    $(".stats-view-container").append("<div class=\"stats-view-list\"></div>");
-    $(".stats-view-list").append("<div class=\"stats-view-minbox\"></div>");
-    $(".stats-view-nav").append("<div class=\"stats-view-minpic\">");
-    $(".stats-view-nav").append("<div class=\"stats-view-textnav\">");
-    $(".stats-view-textnav").append("<div class=\"stats-view-mintitle\">");
-    $(".stats-view-textnav").append("<div class=\"stats-view-minmeta\">");
+    $(".stats-view-nav").append("<div class=\"stats-view-minpic\"></div>");
+    $(".stats-view-nav").append("<div class=\"stats-view-textnav\"></div>");
+    $(".stats-view-textnav").append("<div class=\"stats-view-mintitle\"></div>");
+    $(".stats-view-textnav").append("<div class=\"stats-view-minmeta\"></div>");
     /* Style the minpic */
     $(".stats-view-minpic").css("background", background);
     $(".stats-view-minpic").css("background-size", "40px");
@@ -250,9 +254,6 @@ function secondViewTrigger(path) {
     $(".stats-view-minpic").css("border-radius", "40px");
     $(".stats-view-minpic").css("cursor", "pointer");
     
-    $(".stats-view-minbox").css("border", "1px solid #c1c1c1");
-    $(".stats-view-minbox").css("border-radius", "3px");
-    
     $(".stats-view-nav").css("text-align", "left");
     $(".stats-view-mintitle").append($(".stats-view-title").html());
     $(".stats-view-mintitle").css("font-size", "16px");
@@ -260,56 +261,167 @@ function secondViewTrigger(path) {
     $(".stats-view-minmeta").css("font-size", "10px");
     $(".stats-view-minmeta").css("color", "gray");
     
-    $(".stats-view-nav").css("top", "0");
-    $(".stats-view-nav").css("margin", "10px");
-    $(".stats-view-nav").css("position", "absolute");
+    $(".stats-view-nav").css("margin-top", "5px");
+    $(".stats-view-nav").css("margin-left", "5px");
     $(".stats-view-minpic").css("float", "left");
     $(".stats-view-textnav").css("float", "left");
     $(".stats-view-textnav").css("margin", "10px");
     
+    var label = $(path).next("text").text();
+    $(".stats-view-nav").append("<span>" + label + "</span>");
+    console.log(label);
+    switch (label) {
+        case "Amigos Cercanos":
+            setupData("closeFriends");
+            break;
+        case "Amigos Lejanos":
+            setupData("farFriends");
+            break;
+        case "Amigos Interesantes":
+            setupData("keyPeople");
+            break;
+        case "Líderes de Opinión":
+            setupData("opinionLeaders");
+            break;
+    }
 }
 
 $("stats-view").on('mouseenter', '.stats-view-minpic', function () {
-                   $(this).css("box-shadow", "inset 0px 0px 15px #000");
+                   /*    var color = $(".stats-view-minpic").css("border-color");
+                    color = color.replace(/[^0-9,]+/g, "");
+                    var red = color.split(",")[0];
+                    var gre = color.split(",")[1];
+                    var blu = color.split(",")[2];
+                    var light = Lighthen(red, gre, blu, 0.85);
+                    $(".stats-view-minpic").css("border", "8px " + light + " solid"); */
+                   //$(this).css("box-shadow", "inset 0px 0px 15px #fff");
                    $(this).next().css("text-decoration", "underline");
                    $(this).next().css("cursor", "pointer");
+                   $(".stats-view-minpic").addClass("animated pulse");
                    });
 
 $("stats-view").on('mouseleave', '.stats-view-textnav', function () {
-                   $(".stats-view-minpic").css("box-shadow", "none");
+                   /*  var color = $(".stats-view-minpic").css("border-color");
+                    color = color.replace(/[^0-9,]+/g, "");
+                    var red = color.split(",")[0];
+                    var gre = color.split(",")[1];
+                    var blu = color.split(",")[2];
+                    var dark = Darken(red, gre, blu, 0.85);
+                    $(".stats-view-minpic").css("border", "8px " + dark + " solid"); */
+                   //$(".stats-view-minpic").css("box-shadow", "none");
                    $(this).css("text-decoration", "none");
+                   $(".stats-view-minpic").removeClass("animated pulse");
                    });
 
 $("stats-view").on('mouseenter', '.stats-view-textnav', function () {
-                   $(".stats-view-minpic").css("box-shadow", "inset 0px 0px 15px #000");
+                   /*   var color = $(".stats-view-minpic").css("border-color");
+                    color = color.replace(/[^0-9,]+/g, "");
+                    var red = color.split(",")[0];
+                    var gre = color.split(",")[1];
+                    var blu = color.split(",")[2];
+                    var light = Lighthen(red, gre, blu, 0.85);
+                    $(".stats-view-minpic").css("border", "8px " + light + " solid");*/
+                   //$(".stats-view-minpic").css("box-shadow", "inset 0px 0px 10px #fff");
                    $(this).css("text-decoration", "underline");
                    $(this).css("cursor", "pointer");
+                   $(".stats-view-minpic").addClass("animated pulse");
                    });
 
 $("stats-view").on('mouseleave', '.stats-view-minpic', function () {
-                   $(this).css("box-shadow", "none");
+                   $(".stats-view-minpic").removeClass("animated pulse");
+                   /*var color = $(".stats-view-minpic").css("border-color");
+                    color = color.replace(/[^0-9,]+/g, "");
+                    var red = color.split(",")[0];
+                    var gre = color.split(",")[1];
+                    var blu = color.split(",")[2];
+                    var dark = Darken(red, gre, blu, 0.85);
+                    $(".stats-view-minpic").css("border", "8px " + dark + " solid"); */
+                   //$(this).css("box-shadow", "none");
                    $(this).next().css("text-decoration", "none");
+                   $(".stats-view-minpic").removeClass("animated pulse");
                    });
 
 $("stats-view").on('click', '.stats-view-minpic', function () {
-                   $(".stats-view-graphic").css("visibility", "visible");
-                   $(".stats-view-title").fadeIn("fast");
-                   $(".stats-view-meta").fadeIn("fast");
+                   $(".stats-view-graphic").css("display", "block");
+                   $(".stats-view-box").css("display", "block");
                    $(".stats-view-list").remove();
                    $(".stats-view-minbox").remove();
-                   $(".stats-view-nav").fadeOut("fast", function () {
-                                                $(this).remove();
-                                                
-                                                });
+                   $(".stats-view-nav").remove();
                    });
 
 $("stats-view").on('click', '.stats-view-textnav', function () {
-                   $(".stats-view-graphic").css("visibility", "visible");
-                   $(".stats-view-title").fadeIn("fast");
-                   $(".stats-view-meta").fadeIn("fast");
+                   $(".stats-view-graphic").css("display", "block");
+                   $(".stats-view-box").css("display", "block");
                    $(".stats-view-list").remove();
                    $(".stats-view-minbox").remove();
-                   $(".stats-view-nav").fadeOut("fast", function () {
-                                                $(this).remove();
-                                                });
+                   $(".stats-view-nav").remove();
+                   });
+
+function setupData(datashow) {
+    var items = [];
+    var dataset;
+    var background;
+    switch (datashow) {
+        case "keyPeople":
+            dataset = json.userLocalStats.localNetwork.keyPeople;
+            break;
+        case "opinionLeaders":
+            dataset = json.userLocalStats.localNetwork.opinionLeaders;
+            break;
+        case "farFriends":
+            dataset = json.userLocalStats.localNetwork.opinionLeaders;
+            break;
+        case "closeFriends":
+            dataset = json.userLocalStats.localNetwork.closeFriends;
+            break;
+    }
+    console.log(dataset[0]);
+    $.each(dataset, function (key, value) {
+           background = "url(" + this.picture + ") no-repeat center center";
+           var tags = this.tags.split(",");
+           var i=0;
+           items.push("<div class=\"sl-inbox\">");
+           items.push("<div class=\"inbox-id\">" + this.guid + "</div>");
+           items.push("<div class=\"inbox-img\" style=\"background:" + background + "\"></div>");
+           items.push("<div class=\"inbox-meta\">");
+           items.push("<div class=\"inbox-lead\">" + this.name + "</div>");
+           items.push("<div class=\"inbox-sub\">" + this.location + "</div></div>");
+           /*
+            items.push("<div class=\"inbox-action\">");
+            items.push("<button class=\"inbox-action-button\"");
+            items.push("value=" + this.guid + ">Mensaje</button></div>");
+            */
+           items.push("<div class=\"stats-view-float\">");
+           items.push("<div class=\"stats-view-float-title\">Gustos e Intereses</div>");
+           tags.forEach(function(entry) {
+                        items.push("<div class=\"stats-view-float-tag\">"+tags[i++]+"</div>");
+                        });
+           items.push("</div></div>");
+           });
+    $("<div/>", {
+      "class": "stats-view-list",
+      html: items.join("")
+      }).appendTo(".stats-view-container");
+}
+
+$("stats-view").on('mouseenter', '.sl-inbox', function () {
+                   var colorSet = $(".stats-view-minpic").css("border-color");
+                   if(colorSet == "rgb(255, 235, 7)") {
+                   $(".stats-view-float-tag").css("color","#45484c");        
+                   }
+                   $(".stats-view-float-tag").css("background",colorSet);
+                   //$(this).find(".inbox-img").css("box-shadow", "inset 0px 0px 15px #fff");
+                   $(this).css("cursor", "pointer");
+                   $(this).find(".inbox-img").addClass("animated pulse");
+                   $(this).find(".stats-view-float").css("visibility","visible");
+                   $(this).find(".stats-view-float").addClass("animated fadeInRight");
+                   });
+
+$("stats-view").on('mouseleave', '.sl-inbox', function () {
+                   //$(this).find(".inbox-img").css("box-shadow", "none");
+                   $(this).css("text-decoration", "none");
+                   $(this).find(".inbox-img").removeClass("animated pulse");
+                   $(this).find(".stats-view-float").removeClass("animated fadeInRight");
+                   $(this).find(".stats-view-float").css("visibility","hidden");
+                   //$(this).find(".stats-view-float").remove();
                    });
