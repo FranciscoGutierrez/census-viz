@@ -1,23 +1,38 @@
     {
-        userLocalStats: [
-            '{{repeat(1)}}',
+        userLocalStats:
             {
                 guid: '{{guid()}}',
 				name: '{{firstName()}} {{surname()}}',
-				picture: 'http://placehold.it/42x42',
+				picture: 'http://placehold.it/90x90',
 				company: '{{company()}}',
 				location: '{{city()}}, {{state()}}',
-				localNetwork: [
-					'{{repeat(1)}}',
+				d3PieChart: [{
+						metric: "Amigos Interesantes",
+						population: '{{integer(4,25)}}'
+					},
 					{
+						metric: "Líderes de Opinión",
+						population: '{{integer(3,25)}}'
+					},
+					{
+						metric: "Amigos Lejanos",
+						population: '{{integer(5,25)}}'
+					},
+					{
+						metric: "Amigos Cercanos",
+						population: '{{integer(4,25)}}'
+					}],
+				localNetwork: {
 						keyPeople:	[
 							'{{repeat(5)}}',
 						{
 							guid: '{{guid()}}',
 							name: '{{firstName()}} {{surname()}}',
-							picture: 'http://placehold.it/42x42',
+							picture: 'http://placehold.it/40x40',
 							company: '{{company()}}',
-							location: '{{city()}}, {{state()}}'
+							location: '{{city()}}, {{state()}}',
+							tags: '{{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}'
+                          
 						}
 						],
 						closeFriends:	[
@@ -25,9 +40,11 @@
 						{
 							guid: '{{guid()}}',
 							name: '{{firstName()}} {{surname()}}',
-							picture: 'http://placehold.it/42x42',
+							picture: 'http://placehold.it/40x40',
 							company: '{{company()}}',
-							location: '{{city()}}, {{state()}}'
+							location: '{{city()}}, {{state()}}',
+							tags: '{{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}'
+                          
 						}
 						],
 						farFriends:	[
@@ -35,9 +52,10 @@
 						{
 							guid: '{{guid()}}',
 							name: '{{firstName()}} {{surname()}}',
-							picture: 'http://placehold.it/42x42',
+							picture: 'http://placehold.it/40x40',
 							company: '{{company()}}',
-							location: '{{city()}}, {{state()}}'
+							location: '{{city()}}, {{state()}}',
+							tags: '{{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}'
 						}
 						],
 						opinionLeaders:	[
@@ -45,13 +63,12 @@
 						{
 							guid: '{{guid()}}',
 							name: '{{firstName()}} {{surname()}}',
-							picture: 'http://placehold.it/42x42',
+							picture: 'http://placehold.it/40x40',
 							company: '{{company()}}',
-							location: '{{city()}}, {{state()}}'
+							location: '{{city()}}, {{state()}}',
+							tags: '{{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}, {{random("Arte", "Fuertes", "Puebla", "Francés", "Cultura", "Música", "Barroco", "Iglesia")}}'
 						}
 						]
 					}
-				]
 			}
-		]
 	}
