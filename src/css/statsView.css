@@ -1,0 +1,192 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 CensusViz
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* Social List Component.
+ * Universidad de las Américas Puebla http://ict.udlap.mx
+ * As part of REAUMOBILE project.
+ * Author: Francisco Gutiérrez (fsalvador23@gmail.com)
+ */
+.stats-view-container {
+    background: #fff;
+    width: 350px;
+    height: 370px;
+    padding: 5px;
+    font-family:"Trebuchet MS", Helvetica, sans-serif;
+    font-size: Small;
+    border: 1px solid #c0c0c0;
+    border-radius: 3px;
+    box-shadow: 0px 3px 5px #888888;
+    text-align: center;
+    visibility: hidden;
+}
+.stats-view-box {
+    visibility: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.stats-view-title {
+    font-size: 34px;
+    color: black;
+}
+.stats-view-meta {
+    font-size: 21px;
+    color: gray;
+}
+.stats-view-title span:hover {
+    text-decoration:underline;
+    cursor: pointer;
+}
+.stats-view-meta span:hover {
+    text-decoration:underline;
+    cursor: pointer;
+}
+.stats-view-graphic {
+    width: auto;
+}
+.stats-view-graphic .label {
+    font-size: 14px;
+    fill: #18272e;
+}
+.stats-view-graphic .label-meta {
+    font-size: 10px;
+    fill: #656e7f;
+}
+.stats-view-graphic path:hover {
+    fill: #ace63c;
+}
+/** Next component ***/
+stats-view .stats-view-list {
+    float: left;
+    clear: left;
+    margin-left: 10px;
+}
+stats-view .sl-inbox {
+    height: 58px;
+    width: 260px;
+    margin: 2px;
+    border-radius: 3px;
+}
+stats-view .inbox-img {
+    height: 15px;
+    width: 15px;
+    float: left;
+    padding: 10px;
+    margin: 10px;
+    margin-left: 8px;
+    border-radius: 40px;
+}
+stats-view .inbox-meta {
+    float: left;
+    border-radius: 1px;
+    margin-top: 17px;
+    font-size: 13px;
+    text-align: left;
+}
+stats-view .inbox-meta:hover {
+    cursor:pointer;
+    text-decoration: underline;
+}
+stats-view .inbox-sub {
+    font-size: 11px;
+    color: #898989;
+}
+stats-view .inbox-id {
+    display: hidden;
+}
+stats-view .inbox-action {
+    margin-top: 17px;
+    float: right;
+    width: 80px;
+}
+stats-view .inbox-action-button {
+    border: 1px solid #f85921;
+    border-radius: 2px;
+    color: #fff;
+    background: linear-gradient(#f96b3a, #f96b3a);
+}
+stats-view .box .action-box button:hover {
+    border: 1px solid #d53c07;
+    background: linear-gradient(#f84e12, #f84e12);
+    cursor: pointer;
+}
+stats-view .inbox-action-button button:active {
+    box-shadow: inset 0px 0px 2px #313335;
+}
+.inbox-id {
+    display: none;
+}
+.stats-view-nav span {
+    width: 320px;
+    float: left;
+    text-align: right;
+    margin-top: -10px;
+    border-bottom: 1px solid #acacac;
+}
+.stats-view-float {
+    visibility: hidden;
+    margin-left: 190px;
+    position: relative;
+    width: 110px;
+    height: 60px;
+    padding: 5px;
+    background: rgba(238,238,238,0.85);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 2px;
+}
+.stats-view-float:after {
+    content:'';
+    position: absolute;
+    border-style: solid;
+    border-width: 15px 15px 15px 0;
+    border-color: transparent #eeeeee;
+    display: block;
+    width: 0;
+    z-index: 1;
+    left: -15px;
+    top: 20px;
+}
+.stats-view-float-title {
+    font-size: 11px;
+    color: gray;
+    text-decoration: none;
+    padding: 5px;
+}
+
+.stats-view-float-tag {
+    font-size: 11px;
+    float: left;
+    border-radius: 3px;
+    padding: 2px;
+    color: #fff;
+    margin: 1px;
+}
+
+.stats-view-float-tag:hover {
+    text-decoration: underline;
+}
+
+.stats-view-box:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
