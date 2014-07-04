@@ -1,0 +1,527 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 CensusViz
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+/* Global Network View Component.
+ * This component searches through Neo4j Server Database.
+ * This component uses Neo4j RESTful API
+ * Universidad de las Américas Puebla http://ict.udlap.mx
+ * As part of REAUMOBILE project.
+ * Author: Francisco Gutiérrez (fsalvador23@gmail.com)
+ */
+ .nv-container {
+    padding: 5px;
+    position: relative;
+    width:900px;
+    height: 700px;
+    border: 2px solid #686868;
+    border-radius: 5px;
+    background: #01304e;
+    font-family:"Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.25);
+    overflow:visible;
+}
+.nv-search input {
+    border: 0px solid #6b6b6b;
+    height: 15px;
+    width: 250px;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 14px;
+    color: #686868;
+    border: 1px solid #dadada;
+    margin-left: 5px;
+}
+.nv-search span {
+    color: #363636;
+    font-size: 14px;
+    display: block;
+    text-align: left;
+}
+.nv-search-box {
+    float:left;
+    color: #363636;
+    background: rgba(255, 255, 255, 0.95);
+    width: 253px;
+    padding: 10px;
+    position: absolute;
+    margin-top: 25px;
+    border-bottom: 1px solid #e8e8e8;
+    border-left: 1px solid #e8e8e8;
+    border-right: 1px solid #e8e8e8;
+    -webkit-border-bottom-right-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-bottomright: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    -webkit-box-shadow: 0px 5px 15px -2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 5px 15px -2px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 5px 15px -2px rgba(0, 0, 0, 0.75);
+}
+.nv-opt-title {
+    color: #363636;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid gray;
+}
+.nv-tag-pool {
+    width: 300px;
+    padding: 8px;
+    border-radius: 3px;
+    background:#e7ecef;
+    margin-top: 10px;
+}
+.nv-pool-title {
+    font-family:"Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    text-decoration: none;
+    font-weight: normal;
+    color: #363636;
+    font-size: 14px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid gray;
+}
+.nv-people {
+    visibility: hidden;
+    width: 565px;
+    height: 250px;
+    padding: 5px;
+    border-radius: 3px;
+    background:#e1e7eb;
+    margin-top: 6px;
+    position: absolute;
+    left: 330px;
+    top: 0px;
+}
+.nv-people-title {
+    font-family:"Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    text-decoration: none;
+    font-weight: normal;
+    color: #363636;
+    font-size: 14px;
+    margin-top: 1px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid gray;
+}
+.nv-options {
+    background:#e7ecef;
+    padding: 8px;
+    border-radius: 3px;
+    box-shadow: 0px 0px 29px 0px rgba(0, 0, 0, 1);
+    width: 300px;
+}
+.nv-toolbar {
+    width: 592px;
+    height: 30px;
+    padding: 4px;
+    background: #AAD1D8;
+    border-radius: 5px;
+    margin-top: 5px;
+    float: left;
+    display: none;
+}
+.nv-sb-row:hover {
+    cursor:pointer;
+}
+.nv-sb-element {
+    float: left;
+    clear: left;
+    padding:2px;
+    padding-left:4px;
+    padding-right:4px;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+.nv-sb-term {
+    float: left;
+    color: gray;
+    font-size: 11px;
+    padding: 5px;
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    -moz-border-radius-bottomright: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.nv-tag-Term {
+    border-radius: 2px;
+    display: inline-block;
+    font-size: 13px;
+    margin: 2px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    color: #fff;
+}
+.nv-tag-Poi {
+    border-radius: 2px;
+    display: inline-block;
+    font-size: 14px;
+    margin: 2px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    color: #fff;
+}
+.nv-tag-city {
+    border-radius: 2px;
+    display: inline-block;
+    font-size: 13px;
+    margin: 2px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    color: #fff;
+}
+.nv-tag-profession {
+    border-radius: 2px;
+    display: inline-block;
+    font-size: 13px;
+    margin: 2px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    color: #fff;
+}
+.nv-opt-centralities span {
+    font-size: 14px;
+    display: block;
+    text-align: left;
+    padding-bottom: 2px;
+}
+.nv-opt-centralities {
+    color: #363636;
+}
+.nv-opt-box-centralities {
+    color: black;
+    font-size: 14px;
+    padding: 5px;
+    display: inline;
+    background: #d0ec75;
+}
+.nv-opt-box-centralities-selected {
+    font-size: 14px;
+    padding: 5px;
+    display: inline;
+    background: #afde1e;
+    color: #fff;
+}
+.nv-opt-box-centralities-selected:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.nv-opt-box-centralities:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+/*
+ *  Opt Gender Boxes Styling 
+ */
+ .nv-opt-gender span {
+    font-size: 14px;
+    display: block;
+    text-align: left;
+    padding-bottom: 2px;
+}
+.nv-opt-gender {
+    width: 254px;
+    color: #363636;
+    margin-top: 7px;
+}
+.nv-opt-box-gender {
+    font-size: 14px;
+    padding: 5px;
+    display: inline;
+    background: #f591a3;
+}
+.nv-opt-box-gender-selected {
+    font-size: 14px;
+    padding: 5px;
+    display: inline;
+    background: #f14f6a;
+    color: #fff;
+}
+.nv-opt-box-gender-selected:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.nv-opt-box-gender:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+/*
+ *  Opt Age Boxes Styling 
+ */
+ .nv-opt-age span {
+    font-size: 14px;
+    display: block;
+    text-align: left;
+    padding-bottom: 2px;
+}
+.nv-opt-age {
+    width: 254px;
+    color: #363636;
+    margin-top: 7px;
+}
+.nv-opt-box-age {
+    color: black;
+    font-size: 14px;
+    padding: 5px;
+    display: inline;
+    background: #77d3e6;
+}
+.nv-opt-box-age-selected {
+    font-size: 14px;
+    padding: 5px;
+    display: inline;
+    background: #26b3d1;
+    color: #fff;
+}
+.nv-opt-box-age-selected:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.nv-opt-box-age:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.nv-opt-age input {
+    color: #686868;
+    padding:2px;
+    width: 20px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: 2px;
+    border: 1px solid #dadada;
+}
+/*
+ *
+ */
+ .nv-opt-city span {
+    font-size: 14px;
+    display: block;
+    text-align: left;
+}
+.nv-opt-city {
+    width: 254px;
+    color: #363636;
+    margin-top: 4px;
+}
+.nv-opt-city input {
+    width: 100px;
+    padding: 5px;
+    margin-left: 5px;
+    border-radius: 3px;
+    font-size: 14px;
+    color: #686868;
+    border: 1px solid #dadada;
+}
+.nv-opt-profession span {
+    font-size: 14px;
+    display: block;
+    text-align: left;
+}
+.nv-opt-profession {
+    width: 254px;
+    color: #363636;
+    margin-top: 4px;
+}
+.nv-opt-profession input {
+    width: 144px;
+    padding: 5px;
+    margin-left: 5px;
+    border-radius: 3px;
+    font-size: 14px;
+    color: #686868;
+    border: 1px solid #dadada;
+}
+/*
+ * D3.JS Graphic styling starts from here.
+ */
+ .nv-graphic {
+    position: absolute;
+    left: 10px;
+    top: 390px;
+}
+.nv-graphic path:hover {
+    cursor: pointer;
+}
+.nv-graphic .label {
+    visibility: hidden;
+    fill: white;
+    font-size: 20px;
+}
+.nv-graphic .label-meta {
+    fill: white;
+    font-size: 20px;
+}
+/*
+ * Sigma JS
+ */
+#graph-container {
+    width: 565px;
+    height: 280px;
+}
+.nv-sigma-container {
+    visibility: hidden;
+    background: #e7ecef;
+    border-radius: 5px;
+    padding: 5px;
+    width: 565px;
+    position: absolute;
+    left:330px;
+    top: 380px;
+}
+#graph-container-title {
+    font-family:"Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    text-decoration: none;
+    font-weight: normal;
+    color: #363636;
+    font-size: 14px;
+    margin-top: 1px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid gray;
+}
+/*
+ * People List
+ */
+ .nv-people-list {
+    position: relative;
+}
+.nv-person-box {
+    width: 180px;
+    height: 60px;
+    background: #e9edf0;
+    margin: 2px;
+    border-radius: 3px;
+    overflow: hidden;
+    float: left;
+}
+.nv-box-id {
+    position: relative;
+    display: none;
+}
+.nv-box-img {
+    height: 45px;
+    width: 45px;
+    margin: 8px;
+    float: left;
+    border-radius: 40px;
+}
+.nv-box-title {
+    float: left;
+    position: relative;
+    margin-top: 5px;
+    width: 100px;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+}
+.nv-box-title:hover {
+    text-decoration: underline;
+}
+.nv-box-action {
+    float: left;
+    position: relative;
+    width: 80px;
+}
+/* Button & actions for each person */
+ .nv-box-action-button {
+    border: 1px solid #f85921;
+    border-radius: 2px;
+    color: #fff;
+    background: linear-gradient(#f96b3a, #f96b3a);
+}
+.nv-box-action-button:hover {
+    border: 1px solid #d53c07;
+    background: linear-gradient(#f84e12, #f84e12);
+    cursor: pointer;
+}
+.nv-box-action-button:active {
+    box-shadow: inset 0px 0px 2px #313335;
+}
+/* Paginator */
+ h1, h2, ul {
+    clear: both;
+}
+ul.pagination1 li:hover, ul.pagination2 li:hover, ul.pagination3 li:hover {
+    background-color: #e0e5e5;
+}
+ul.pagination1 li, ul.pagination2 li, ul.pagination3 li {
+    padding: 5px;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    background-color: #e0e5e5;
+    font-size: 24px;
+    color: #fff;
+    line-height: 1;
+    width: 600px;
+    margin-bottom: 0px;
+    list-style:none;
+}
+ul.red {
+    outline:10px solid red;
+}
+ul.simplePagerNav li {
+    display:block;
+    float: left;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-size:12px;
+    border-radius: 5px;
+}
+ul.simplePagerNav li a {
+    color: #333;
+    text-decoration: none;
+}
+li.currentPage {
+    background: red;
+    background: #f96b3a;
+}
+ul.simplePagerNav li.currentPage a {
+    color: #fff;
+}
+table.pageme {
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+}
+table.pageme td {
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+}
+ul.simplePagerNav li:hover {
+    text-decoration: underline;
+}
